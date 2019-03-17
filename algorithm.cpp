@@ -8,6 +8,19 @@
 
 using namespace std;
 
+template <typename T> 
+ostream& operator<<(ostream& os, const vector<T>& v) 
+{ 
+    os << "["; 
+    for (int i = 0; i < v.size(); ++i) { 
+        os << v[i]; 
+        if (i != v.size() - 1) 
+            os << ", "; 
+    } 
+    os << "]\n"; 
+    return os; 
+} 
+
 typedef struct Subsets{
     //int;
     int flag;
@@ -28,7 +41,7 @@ public:
     Subsets *subset1, *subset2;
     size_t size, sub_size;
 
-    size_t size_of_max_clicue = -1;
+    size_t size_of_max_clicue = 0;
     Search_kliks(Graph G){
         //size - половина суммарного размера
         size = (int)ceil(G.size/2+0.5);
@@ -54,8 +67,8 @@ public:
         
         sub_size = (int)pow(2, size);
 
-        kliks1.resize(sub_size);
-        kliks2.resize(sub_size);
+        kliks1.resize(size+1);
+        kliks2.resize(size+1);
         
         
         this->inizialise_subset(&subset1);
@@ -136,17 +149,18 @@ public:
 
 
     std::vector<size_t> GetMaxClique() {
+        size_of_max_clicue = 0;
+        vector<size_t> max_clicue;
         for(int i = size; i >= 0; i--) {
             for(int j = size; j >= 0; j--)
                 for(uint64_t klik2 : kliks2[i]) 
                     for(pair<uint64_t,uint64_t> klik1 : kliks1[j])
-                        if((klik1.second & klik2) == klik2) {
+                        if((klik1.second & klik2) == klik2 && size_of_max_clicue < i+j) {
                             size_of_max_clicue = i+j;
-                            return make_vertex_set(klik1.first, klik2, size_of_max_clicue);
+                            max_clicue =  make_vertex_set(klik1.first, klik2, size_of_max_clicue);
                         }
         }
-        vector<size_t> max_clique;
-        return max_clique;
+        return max_clicue;
     }
 
 
@@ -179,10 +193,10 @@ public:
 
 
     vector<size_t> make_vertex_set(uint64_t set1,uint64_t set2,int size_of_set) {
-        vector<size_t> max_clique(size_of_set);
+        vector<size_t> max_clique;
         for(int i = 0; i < size; i++)
             if((set1 & (((uint64_t)1)<<i)) > 0)
-                max_clique.push_back(size - i - 1);
+               max_clique.push_back(size - i - 1);
 
         for(int i = 0; i < size; i++)
             if((set2 & (((uint64_t)1)<<i)) > 0)

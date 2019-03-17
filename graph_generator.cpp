@@ -5,6 +5,15 @@ using namespace std;
 
 class Graph_Generator{
 public:
+    int m[7][7] = {
+        1, 0, 1, 1, 0, 0, 1, 
+        0, 1, 1, 0, 0, 1, 0, 
+        1, 1, 1, 0, 0, 1, 0, 
+        1, 0, 0, 1, 1, 1, 0, 
+        0, 0, 0, 1, 1, 0, 1, 
+        0, 1, 1, 1, 0, 1, 1, 
+        1, 0, 0, 0, 1, 1, 1
+    };
     Graph get_random_graph(size_t size) {
         Graph g(size);
         srand(time(NULL));
