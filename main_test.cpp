@@ -1,8 +1,17 @@
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+
+
 #include"algorithm.cpp" //Алгоритм MIIM 
 #include"kerbosh.cpp"
 
 
 int main() {
+
+  
+ 
+
+
     Graph_Generator generator;
 
     //input size
@@ -11,6 +20,7 @@ int main() {
 
     Graph G  = generator.get_random_graph(size);
 
+    //Graph G = generator.get_bad_graph();
     G.print();
     //Запускаем алгоритм Брона — Кербоша
     cout << "------------------------------Bron-Kerbosh -------------------------------------\n";
@@ -22,7 +32,8 @@ int main() {
     clock_t end = clock();
     double seconds = (double)(end - start) / CLOCKS_PER_SEC;
     printf("The time: %f seconds\n", seconds);
-
+    //k_search.~Kerbosh_Search();
+    
 
     //Запускаем алгоритм MIIM
     cout << "----------------------------------MIIM --------------------------------------\n";

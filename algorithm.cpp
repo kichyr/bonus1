@@ -12,7 +12,7 @@ template <typename T>
 ostream& operator<<(ostream& os, const vector<T>& v) 
 { 
     os << "["; 
-    for (int i = 0; i < v.size(); ++i) { 
+    for (uint i = 0; i < v.size(); ++i) { 
         os << v[i]; 
         if (i != v.size() - 1) 
             os << ", "; 
@@ -22,8 +22,7 @@ ostream& operator<<(ostream& os, const vector<T>& v)
 } 
 
 typedef struct Subsets{
-    //int;
-    int flag;
+    int flag = 0;
     uint64_t img;
     int size_of_subset;
 }Subsets;
@@ -35,16 +34,19 @@ public:
 
     vector<vector<pair<uint64_t,uint64_t>>> kliks1;
     vector<vector<uint64_t>> kliks2;
+    vector<size_t> max_clicue;
      
 
     Graph G1, G2, G3;
     Subsets *subset1, *subset2;
     size_t size, sub_size;
+    
 
     size_t size_of_max_clicue = 0;
     Search_kliks(Graph G){
         //size - половина суммарного размера
-        size = (int)ceil(G.size/2+0.5);
+        if(G.size%2 == 1) size = G.size/2 + 1;
+        else size = G.size/2;
         G1 = Graph(size);
         G2 = Graph(size);
         G3 = Graph(size); // for connection
@@ -60,11 +62,7 @@ public:
         massive(G1, adj_m1);
         massive(G2, adj_m2);
         massive(G3, adj_m3);
-        //
-        //G1.print();
-        //G2.print();
-        //G3.print();
-        
+
         sub_size = (int)pow(2, size);
 
         kliks1.resize(size+1);
@@ -73,7 +71,7 @@ public:
         
         this->inizialise_subset(&subset1);
         this->inizialise_subset(&subset2);
-        //
+
         subset1[0].flag = 1;
         subset1[0].img = 0;
         subset1[0].size_of_subset = 0;
@@ -84,12 +82,20 @@ public:
         kliks2[0].push_back(0);
 
         tree_search(0, size-1);
-        
-        //print_parts_of_kliks();
 
-        //print_parts_of_kliks();
-        //print_kliks();
+    }
 
+    ~Search_kliks() {
+        delete[]adj_m1;
+        delete[]adj_m2;
+        delete[]adj_m3;
+
+        kliks1.clear();
+        kliks2.clear();
+        max_clicue.clear();
+
+        delete[]subset1;
+        delete[]subset2;
     }
 
     void inizialise_subset(Subsets **subset) {
@@ -98,7 +104,7 @@ public:
 
 
     void tree_search(uint64_t i, int level) {
-        if(!(level >= 0)) return;
+        if(!(level >= -1)) return;
         
         uint64_t right_c = (i|(((uint64_t)1)<<level));
 
@@ -112,6 +118,7 @@ public:
                     subset1[right_c].img = subset1[i].img & adj_m3[size-level-1];
                 else
                     subset1[right_c].img = adj_m3[size-level-1];
+                
 
                 kliks1[subset1[right_c].size_of_subset].push_back(make_pair(right_c, subset1[right_c].img));
             }
@@ -126,13 +133,13 @@ public:
             }
         }
 
-    tree_search(right_c, level-1);
+        tree_search(right_c, level-1);
         tree_search(i, level-1);
     }
 
     // Необходимые методы
     bool HasClique(size_t clique_size) {
-        for(int i = 0; i <= size; i++) {
+        for(uint i = 0; i <= size; i++) {
             for(uint64_t klik2 : kliks2[i]) 
                 for(pair<uint64_t,uint64_t> klik1 : kliks1[clique_size - i])
                     if((klik1.second & klik2) == klik2) {
@@ -150,14 +157,15 @@ public:
 
     std::vector<size_t> GetMaxClique() {
         size_of_max_clicue = 0;
-        vector<size_t> max_clicue;
         for(int i = size; i >= 0; i--) {
+            if(i+size < size_of_max_clicue)
+                break;
             for(int j = size; j >= 0; j--)
                 for(uint64_t klik2 : kliks2[i]) 
                     for(pair<uint64_t,uint64_t> klik1 : kliks1[j])
-                        if((klik1.second & klik2) == klik2 && size_of_max_clicue < i+j) {
+                        if((klik1.second & klik2) == klik2 && size_of_max_clicue < (uint)i+j) {
                             size_of_max_clicue = i+j;
-                            max_clicue =  make_vertex_set(klik1.first, klik2, size_of_max_clicue);
+                            max_clicue =  make_vertex_set(klik1.first, klik2);
                         }
         }
         return max_clicue;
@@ -166,9 +174,8 @@ public:
 
 
     // Дохрена различных выводов
-
     void find_k_kliks(int k) {
-        for(int i = 0; i < size; i++) {
+        for(uint i = 0; i < size; i++) {
             for(uint64_t klik2 : kliks2[i]) 
                 for(pair<uint64_t,uint64_t> klik1 : kliks1[k - i])
                     if((klik1.second & klik2) == klik2) {
@@ -179,12 +186,12 @@ public:
     }
 
     void print_parts_of_kliks() {
-        for(int i = 0; i < size; i++) {
+        for(uint i = 0; i < size; i++) {
             cout << "\n" << i  << endl;
             for(pair<uint64_t,uint64_t> klik1 : kliks1[i])
                 cout << " (" << klik1.first << "; " << klik1.second << ")";
         }
-        for(int i = 0; i < size; i++) {
+        for(uint i = 0; i < size; i++) {
             cout << "\n" << i  << endl;
             for(uint64_t klik2 : kliks2[i])
                 cout << " " << klik2;
@@ -192,24 +199,24 @@ public:
     }
 
 
-    vector<size_t> make_vertex_set(uint64_t set1,uint64_t set2,int size_of_set) {
+    vector<size_t> make_vertex_set(uint64_t set1,uint64_t set2) {
         vector<size_t> max_clique;
-        for(int i = 0; i < size; i++)
+        for(uint i = 0; i < size; i++)
             if((set1 & (((uint64_t)1)<<i)) > 0)
                max_clique.push_back(size - i - 1);
 
-        for(int i = 0; i < size; i++)
+        for(uint i = 0; i < size; i++)
             if((set2 & (((uint64_t)1)<<i)) > 0)
                 max_clique.push_back(2*size - i - 1);
         return max_clique;
     }
 
     void print_set(uint64_t set1,uint64_t set2) {
-        for(int i = 0; i < size; i++)
+        for(uint i = 0; i < size; i++)
             if((set1 & (((uint64_t)1)<<i)) > 0)
                 cout << size - i - 1 << ' ';
 
-        for(int i = 0; i < size; i++)
+        for(uint i = 0; i < size; i++)
             if((set2 & (((uint64_t)1)<<i)) > 0)
                 cout << 2*size - i - 1 << ' ';
         cout << "\n";
@@ -224,6 +231,5 @@ public:
             if(subset2[i].flag == 1)
                 cout << i << " ";
         }
-        //cout << sub_size;
     }
 };

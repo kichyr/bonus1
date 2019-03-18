@@ -8,14 +8,11 @@ class Kerbosh_Search{
 
 list<set<int>> max_by_inclusion_kliks;
 int **add_m;
+int size;
 public:
     Kerbosh_Search(Graph G) {
         addition_matrix(G.matrix, G.size);
         max_by_inclusion_kliks = kerbosh(add_m, G.size);
-    }
-
-    ~Kerbosh_Search() {
-        max_by_inclusion_kliks.clear();
     }
 
     void print_kliks() {
@@ -24,6 +21,12 @@ public:
                 cout << i << " ";
         cout << endl;
         }
+    }
+
+    ~Kerbosh_Search() {
+        for(int i = 0; i < size; i++)
+            delete[]add_m[i];
+        max_by_inclusion_kliks.clear();
     }
 
     size_t GetMaxCliqueSize() {
@@ -48,7 +51,8 @@ public:
         return max_clique;
     }
 
-    void addition_matrix(int **matrix, int size){
+    void addition_matrix(int **matrix, uint size){
+        this->size = size;
         add_m = new int* [size];
 		for(size_t i = 0; i < size; i++){
 			add_m[i] = new int [size];
@@ -66,8 +70,8 @@ public:
     }
 
 
-    list<set<int> >kerbosh(int **&a,int SIZE)
-    {
+
+    list<set<int> >kerbosh(int **&a,int SIZE) {
         set <int> M,G,K,P;
         list<set<int> > REZULT;
         for (int i=0; i<SIZE;i++)
