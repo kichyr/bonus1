@@ -54,6 +54,12 @@ public:
 
         Separate(G, G1, G2, G3);
 
+
+        //G1.print();
+        //G2.print();
+        //G3.print();
+
+
         adj_m1 = new uint64_t[size];
         adj_m2 = new uint64_t[size];	
         adj_m3 = new uint64_t[size];	
@@ -104,7 +110,7 @@ public:
 
 
     void tree_search(uint64_t i, int level) {
-        if(!(level >= -1)) return;
+        if(!(level >= 0)) return;
         
         uint64_t right_c = (i|(((uint64_t)1)<<level));
 
@@ -186,12 +192,12 @@ public:
     }
 
     void print_parts_of_kliks() {
-        for(uint i = 0; i < size; i++) {
+        for(uint i = 0; i <= size; i++) {
             cout << "\n" << i  << endl;
             for(pair<uint64_t,uint64_t> klik1 : kliks1[i])
                 cout << " (" << klik1.first << "; " << klik1.second << ")";
         }
-        for(uint i = 0; i < size; i++) {
+        for(uint i = 0; i <= size; i++) {
             cout << "\n" << i  << endl;
             for(uint64_t klik2 : kliks2[i])
                 cout << " " << klik2;

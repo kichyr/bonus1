@@ -81,7 +81,7 @@ void Separate(Graph & G, Graph & G1, Graph & G2, Graph & G3){
 				G2.matrix[j][i] = G.matrix[G2.size + i][G2.size + j];
 			}
 		}
-		for(size_t i = 0; i < G.size - G3.size; i++){
+		for(size_t i = 0; i < G3.size; i++){
 			for(size_t j = 0; j < G.size - G3.size; j++){
 				G3.matrix[i][j] = G.matrix[i][G3.size+j];
 			}

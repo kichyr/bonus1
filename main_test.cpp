@@ -18,9 +18,9 @@ int main() {
     int size;
     cin >> size;
 
-    Graph G  = generator.get_random_graph(size);
+    //Graph G  = generator.get_random_graph(size);
 
-    //Graph G = generator.get_bad_graph();
+    Graph G = generator.get_bad_graph();
     G.print();
     //Запускаем алгоритм Брона — Кербоша
     cout << "------------------------------Bron-Kerbosh -------------------------------------\n";
