@@ -68,7 +68,9 @@ public:
         massive(G1, adj_m1);
         massive(G2, adj_m2);
         massive(G3, adj_m3);
-
+        G1.free();
+        G2.free();
+        G3.free();
         sub_size = (int)pow(2, size);
 
         kliks1.resize(size+1);

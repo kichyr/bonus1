@@ -27,6 +27,7 @@ public:
         for(int i = 0; i < size; i++)
             delete[]add_m[i];
         max_by_inclusion_kliks.clear();
+        delete[]add_m;
     }
 
     size_t GetMaxCliqueSize() {

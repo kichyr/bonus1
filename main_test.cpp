@@ -18,10 +18,10 @@ int main() {
     int size;
     cin >> size;
 
-    //Graph G  = generator.get_random_graph(size);
+    Graph G  = generator.get_random_graph(size);
 
-    Graph G = generator.get_bad_graph();
-    G.print();
+    //Graph G = generator.get_bad_graph();
+    //G.print();
     //Запускаем алгоритм Брона — Кербоша
     cout << "------------------------------Bron-Kerbosh -------------------------------------\n";
 
@@ -46,7 +46,7 @@ int main() {
     seconds = (double)(end - start) / CLOCKS_PER_SEC;
     printf("The time: %f seconds\n", seconds);
 
-
+    G.free();
     //finding error
     //cout << MIIM_search.GetMaxClique();
     //MIIM_search.print_parts_of_kliks();

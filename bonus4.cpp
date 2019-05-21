@@ -11,7 +11,20 @@ public:
 	size_t size;
 	int** matrix;
 
-	Graph(){}
+		Graph(){}
+		/*Graph(const Graph &a) {
+			size = a.size;
+			matrix = new int* [size];
+			for(size_t i = 0; i < size; i++){
+				matrix[i] = new int [size];
+			}
+			for(size_t i = 0; i < size; i++){
+				for(size_t j = 0; j <= i; j++){
+					matrix[j][i] = a.matrix[i][j];
+				}
+			}
+		}*/
+
     Graph(size_t n_vertex) {
 		size = n_vertex;
 		matrix = new int* [size];
@@ -30,13 +43,14 @@ public:
 	}
 
 	// Какого не работает ??
-	/*~Graph() {
+	
+	void free() {
 		for(size_t i = 0; i < size; i++){
 			delete[]matrix[i];
 		}
 		delete[]matrix;
 		
-	}*/
+	}
 	
 
 	void print(){
@@ -48,7 +62,7 @@ public:
 		}
 	}
 	
-    void AddEdge(size_t from, size_t to){
+  void AddEdge(size_t from, size_t to){
 			matrix[from][to] = 1;
 			matrix[to][from] = matrix[from][to];
 	}
@@ -86,4 +100,8 @@ void Separate(Graph & G, Graph & G1, Graph & G2, Graph & G3){
 				G3.matrix[i][j] = G.matrix[i][G3.size+j];
 			}
 		}
+		
+		for(size_t i = 0; i < G3.size; i++)
+				G3.matrix[i][G3.size-1] = 0;
+		
 }

@@ -18,7 +18,7 @@ public:
     
 
     Graph get_bad_graph() {
-        size_t n_vertices = 13;
+        size_t n_vertices = 14;
         Graph result(n_vertices);
         for (uint i = 0; i < n_vertices; ++i) {
             for (uint j = 0; j < n_vertices; ++j) {
